@@ -1,0 +1,40 @@
+# Inside your container
+cd /usr/src/redmine/plugins
+
+# Clone the main plugin
+git clone https://github.com/alphanodes/redmine_billing.git
+
+# Install dependencies (also required)
+git clone https://github.com/alphanodes/redmine_automation.git
+git clone https://github.com/alphanodes/redmine_reporting.git
+git clone https://github.com/alphanodes/redmine_datetime_custom_field.git
+git clone https://github.com/alphanodes/redmine_privacy.git
+
+# Return to Redmine root
+cd /usr/src/redmine
+
+# Install gems
+bundle install
+
+# Run migrations
+RAILS_ENV=production bundle exec rake redmine:plugins:migrate
+
+# Restart Redmine container (after exiting)
+exit
+docker-compose restart redmine
+
+
+
+
+
+
+
+
+
+
+
+
+
+docker-compose exec redmine bash
+
+docker cp redmine_crm-4_4_2-light.zip redmine_invoice-redmine-1:/usr/src/redmine/plugins/

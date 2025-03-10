@@ -1,0 +1,35 @@
+# Docker Compose configuration for Redmine using official image
+
+services:
+  redmine:
+    image: redmine:5
+    ports:
+      - "3000:3000"
+    volumes:
+      - redmine_files:/usr/src/redmine/files
+      - redmine_plugins:/usr/src/redmine/plugins
+      - ./config/configuration.yml:/usr/src/redmine/config/configuration.yml
+    environment:
+      - REDMINE_DB_POSTGRES=postgres
+      - REDMINE_DB_DATABASE=redmine
+      - REDMINE_DB_USERNAME=redmine
+      - REDMINE_DB_PASSWORD=redmine_password
+      - REDMINE_DB_PORT=5432
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:15
+    environment:
+      - POSTGRES_USER=redmine
+      - POSTGRES_PASSWORD=redmine_password
+      - POSTGRES_DB=redmine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  redmine_files:
+  redmine_plugins:
+  postgres_data:

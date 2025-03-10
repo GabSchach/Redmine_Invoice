@@ -1,0 +1,26 @@
+production:
+  adapter: postgresql
+  database: redmine
+  host: postgres
+  username: redmine
+  password: redmine_password
+  port: 5432
+  encoding: utf8
+
+development:
+  adapter: postgresql
+  database: redmine
+  host: postgres
+  username: redmine
+  password: redmine_password
+  port: 5432
+  encoding: utf8
+
+test:
+  adapter: postgresql
+  database: redmine_test
+  host: postgres
+  username: redmine
+  password: redmine_password
+  port: 5432
+  encoding: utf8

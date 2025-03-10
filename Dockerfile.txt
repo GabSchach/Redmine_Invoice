@@ -1,0 +1,55 @@
+FROM ruby:3.2
+
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    postgresql-client \
+    libpq-dev \
+    imagemagick \
+    build-essential \
+    libssl-dev \
+    zlib1g-dev \
+    libyaml-dev \
+    libreadline-dev \
+    nodejs \
+    git \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create redmine user and group
+RUN groupadd -r redmine && useradd -r -g redmine redmine
+
+# Set working directory
+WORKDIR /usr/src/redmine
+
+# Download and extract Redmine 6.0
+RUN curl -L https://www.redmine.org/releases/redmine-6.0.0.tar.gz -o redmine.tar.gz \
+    && tar -xzf redmine.tar.gz --strip-components=1 \
+    && rm redmine.tar.gz
+
+# Create necessary directories
+RUN mkdir -p tmp tmp/pdf public/plugin_assets files log
+
+# Copy configuration files
+COPY config/database.yml config/database.yml
+COPY config/configuration.yml config/configuration.yml
+
+# Install gems
+RUN gem install bundler
+RUN gem install svg_sprite
+RUN bundle install --without development test
+
+# Generate secret token
+RUN RAILS_ENV=production bundle exec rake generate_secret_token
+
+# Set permissions
+RUN chown -R redmine:redmine files log tmp public/plugin_assets \
+    && chmod -R 755 files log tmp public/plugin_assets
+
+# Set the user to run the container
+USER redmine
+
+# Expose port
+EXPOSE 3000
+
+# Start Redmine
+CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"]

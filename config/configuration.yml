@@ -1,0 +1,27 @@
+default:
+  # Outgoing email settings
+  email_delivery:
+    delivery_method: :smtp
+    smtp_settings:
+      address: "smtp.example.com"
+      port: 25
+      domain: "example.com"
+      authentication: :login
+      user_name: "redmine@example.com"
+      password: "redmine"
+      
+  # Attachment storage settings 
+  attachments_storage_path: /usr/src/redmine/files
+  
+  # Authentication modes
+  # Available modes: :ldap, :cas, none
+  authentication_mode: none
+  
+production:
+  # Use the default settings
+
+development:
+  # Use the default settings
+
+test:
+  # Use the default settings
